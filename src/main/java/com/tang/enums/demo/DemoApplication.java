@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Repository;
 
 @SpringBootApplication
-@MapperScan(annotationClass = Repository.class, basePackages = "com.tang.flowable.demo.dao")
+@MapperScan(annotationClass = Repository.class, basePackages = "com.tang.enums.demo.dao")
 public class DemoApplication {
 
     public static void main(String[] args) {
