@@ -1,0 +1,27 @@
+server:
+  port: 18080
+
+
+#日志
+logging:
+  file:
+    name: log/${spring.application.name}.log
+
+spring:
+  application:
+    name: enums-demo
+  datasource:
+    #这里使用自己的数据库配置
+    username:
+    password:
+    url:
+  flyway:
+    enabled: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mappers/*.xml
+
+
+
