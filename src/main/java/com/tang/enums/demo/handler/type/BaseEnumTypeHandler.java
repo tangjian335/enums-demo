@@ -20,7 +20,7 @@ public class BaseEnumTypeHandler<E extends Enum<E> & BaseEnum<?>> extends BaseTy
 
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, E e, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setObject(i, e.getValue());
+        preparedStatement.setObject(i, e.getCode());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BaseEnumTypeHandler<E extends Enum<E> & BaseEnum<?>> extends BaseTy
     private E valueOf(String value) {
         E[] constants = type.getEnumConstants();
         for (E each : constants) {
-            if (Objects.equals(String.valueOf(each.getValue()), value)) {
+            if (Objects.equals(String.valueOf(each.getCode()), value)) {
                 return each;
             }
         }

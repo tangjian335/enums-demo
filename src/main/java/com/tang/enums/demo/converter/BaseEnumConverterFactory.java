@@ -42,7 +42,7 @@ public class BaseEnumConverterFactory implements ConverterFactory<String, BaseEn
         @Override
         public T convert(String source) {
             for (T t : values) {
-                if (Objects.equals(String.valueOf(t.getValue()), source)) {
+                if (Objects.equals(String.valueOf(t.getCode()), source)) {
                     return t;
                 }
             }

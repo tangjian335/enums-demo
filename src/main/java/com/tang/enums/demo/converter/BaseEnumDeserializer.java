@@ -34,7 +34,7 @@ public class BaseEnumDeserializer extends JsonDeserializer<BaseEnum<?>> implemen
         String value = p.getCodec().readValue(p, String.class);
         for (Object enumConstant : enumConstants) {
             BaseEnum<?> baseEnum = (BaseEnum<?>) enumConstant;
-            if (Objects.equals(String.valueOf(baseEnum.getValue()), value)) {
+            if (Objects.equals(String.valueOf(baseEnum.getCode()), value)) {
                 return baseEnum;
             }
         }

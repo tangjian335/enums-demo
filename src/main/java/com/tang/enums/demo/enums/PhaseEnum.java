@@ -18,7 +18,7 @@ public enum PhaseEnum implements BaseEnum<String> {
     middle_age("4", "中年"),
     old_age("5", "老年");
 
-    private final String value;
+    private final String code;
 
     private final String desc;
 }

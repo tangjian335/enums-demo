@@ -39,10 +39,10 @@ public class EnumParameterBuilderPlugin implements ParameterBuilderPlugin, Opera
 
             Object[] enumConstants = type.getEnumConstants();
 
-            Class<?> valueClass = ((BaseEnum<?>)enumConstants[0]).getValue().getClass();
+            Class<?> valueClass = ((BaseEnum<?>)enumConstants[0]).getCode().getClass();
             List<String> displayValues = Arrays.stream(enumConstants).filter(Objects::nonNull).map(item -> {
                 BaseEnum<?> baseEnum = (BaseEnum<?>) item;
-                return String.valueOf(baseEnum.getValue());
+                return String.valueOf(baseEnum.getCode());
             }).collect(Collectors.toList());
 
             RequestParameterBuilder parameterBuilder = context.requestParameterBuilder();
@@ -71,7 +71,7 @@ public class EnumParameterBuilderPlugin implements ParameterBuilderPlugin, Opera
                 List<String> displayValues = Arrays.stream(enumConstants).filter(Objects::nonNull).map(item -> {
                     BaseEnum<?> namedEnum = (BaseEnum<?>) item;
 
-                    String value = String.valueOf(namedEnum.getValue());
+                    String value = String.valueOf(namedEnum.getCode());
 
                     String name = namedEnum.getDesc();
                     return value + ":" + name;

@@ -15,7 +15,7 @@ public enum GenderEnum implements BaseEnum<Integer> {
     male(1, "男性", "xy"),
     female(2, "女性", "xx");
 
-    private final Integer value;
+    private final Integer code;
 
     private final String desc;
 
@@ -23,7 +23,7 @@ public enum GenderEnum implements BaseEnum<Integer> {
 
     public static GenderEnum valueOf(Integer code){
         for (GenderEnum each : values()) {
-            if (each.value.equals(code)) {
+            if (each.code.equals(code)) {
                 return each;
             }
         }

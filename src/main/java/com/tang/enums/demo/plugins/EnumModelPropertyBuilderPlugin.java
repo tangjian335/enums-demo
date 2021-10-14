@@ -56,14 +56,14 @@ public class EnumModelPropertyBuilderPlugin implements ModelPropertyBuilderPlugi
 
             Object[] enumConstants = fieldType.getEnumConstants();
 
-            Class<?> valueClass = ((BaseEnum<?>)enumConstants[0]).getValue().getClass();
+            Class<?> valueClass = ((BaseEnum<?>)enumConstants[0]).getCode().getClass();
 
             List<String> displayValues =
                     Arrays.stream(enumConstants)
                             .filter(Objects::nonNull)
                             .map(item -> {
                                 BaseEnum<?> baseEnum = (BaseEnum<?>) item;
-                                String value = String.valueOf(baseEnum.getValue());
+                                String value = String.valueOf(baseEnum.getCode());
                                 String name = baseEnum.getDesc();
                                 return value + ":" + name;
 

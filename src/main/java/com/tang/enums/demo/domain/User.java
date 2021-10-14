@@ -1,8 +1,7 @@
 package com.tang.enums.demo.domain;
 
 import com.tang.enums.demo.enums.GenderEnum;
-import com.tang.enums.demo.enums.PhaseEnum;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -13,16 +12,17 @@ import lombok.Data;
 @Data
 public class User {
 
-    @ApiModelProperty("id")
+    @Schema(description = "id")
     private Long id;
 
-    @ApiModelProperty("性别")
+    @Schema(description = "性别")
     private GenderEnum gender;
 
-    @ApiModelProperty("名称")
+    @Schema(description = "名称")
     private String name;
 
-    @ApiModelProperty("角色名")
+    @Schema(description = "角色名")
     private String roleName;
+
 
 }

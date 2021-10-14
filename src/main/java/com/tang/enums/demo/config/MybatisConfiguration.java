@@ -4,13 +4,10 @@ import com.tang.enums.demo.handler.type.BaseEnumTypeHandler;
 import com.tang.enums.demo.interfaces.BaseEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -22,7 +19,6 @@ import org.springframework.util.ClassUtils;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.util.StringUtils.tokenizeToStringArray;
@@ -36,42 +32,38 @@ import static org.springframework.util.StringUtils.tokenizeToStringArray;
  */
 @Slf4j
 @Configuration
-public class MybatisConfiguration implements ApplicationContextAware, InitializingBean {
+public class MybatisConfiguration {
 
-    private static final ResourcePatternResolver RESOURCE_PATTERN_RESOLVER = new PathMatchingResourcePatternResolver();
-    private static final MetadataReaderFactory METADATA_READER_FACTORY = new CachingMetadataReaderFactory();
-
-    private ApplicationContext applicationContext;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Set<Class<?>> classes = scanClasses("com.tang.enums.demo.enums", BaseEnum.class);
-        Map<String, SqlSessionFactory> beansMap = applicationContext.getBeansOfType(SqlSessionFactory.class);
-        for (SqlSessionFactory sqlSessionFactory : beansMap.values()) {
-            TypeHandlerRegistry typeHandlerRegistry = sqlSessionFactory.getConfiguration().getTypeHandlerRegistry();
-            for (Class<?> aClass : classes) {
-                typeHandlerRegistry.register(aClass, BaseEnumTypeHandler.class);
+    @Bean
+    public ConfigurationCustomizer configurationCustomizer() {
+        return configuration -> {
+            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+            try {
+                Set<Class<?>> classes = scanClasses("com.tang.enums.demo.enums", BaseEnum.class);
+                for (Class<?> aClass : classes) {
+                    typeHandlerRegistry.register(aClass, BaseEnumTypeHandler.class);
+                }
+            } catch (IOException e) {
+                log.error("配置mybatis转换器失败", e);
+                throw new RuntimeException("配置mybatis转换器失败");
             }
-        }
+        };
     }
 
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     @SuppressWarnings("SameParameterValue")
     private Set<Class<?>> scanClasses(String packagePatterns, Class<?> assignableType) throws IOException {
         Set<Class<?>> classes = new HashSet<>();
         String[] packagePatternArray = tokenizeToStringArray(packagePatterns,
                 ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory();
         for (String packagePattern : packagePatternArray) {
-            Resource[] resources = RESOURCE_PATTERN_RESOLVER.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+            Resource[] resources = resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
                     + ClassUtils.convertClassNameToResourcePath(packagePattern) + "/**/*.class");
             for (Resource resource : resources) {
                 try {
-                    ClassMetadata classMetadata = METADATA_READER_FACTORY.getMetadataReader(resource).getClassMetadata();
+                    ClassMetadata classMetadata = metadataReaderFactory.getMetadataReader(resource).getClassMetadata();
                     Class<?> clazz = Resources.classForName(classMetadata.getClassName());
                     if (assignableType == null || assignableType.isAssignableFrom(clazz)) {
                         classes.add(clazz);

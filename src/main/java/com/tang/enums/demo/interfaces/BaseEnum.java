@@ -14,7 +14,7 @@ import com.tang.enums.demo.converter.BaseEnumDeserializer;
 public interface BaseEnum<T> {
 
     @JsonValue
-    T getValue();
+    T getCode();
 
     String getDesc();
 }
